@@ -82,6 +82,7 @@ extern "C"
 		pdu.get_notify_id(id);
 		cout << "ID:  " << id.get_printable() << endl;
 		cout << "Type:" << pdu.get_type() << endl;
+		trapoid += (string)"From" + from.get_printable();
 		trapoid += (string)"\r\nOid : " + (id.get_printable());
 
 		for (int i = 0; i < pdu.get_vb_count(); i++)
