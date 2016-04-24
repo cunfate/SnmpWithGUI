@@ -45,6 +45,7 @@
             this.textBoxForTrap = new System.Windows.Forms.TextBox();
             this.groupBoxTrap = new System.Windows.Forms.GroupBox();
             this.timerForUpdate = new System.Windows.Forms.Timer(this.components);
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBoxResult.SuspendLayout();
             this.groupBoxTrap.SuspendLayout();
             this.SuspendLayout();
@@ -166,6 +167,7 @@
             this.textBoxForTrap.Multiline = true;
             this.textBoxForTrap.Name = "textBoxForTrap";
             this.textBoxForTrap.ReadOnly = true;
+            this.textBoxForTrap.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxForTrap.Size = new System.Drawing.Size(351, 367);
             this.textBoxForTrap.TabIndex = 12;
             // 
@@ -184,12 +186,22 @@
             this.timerForUpdate.Interval = 1000;
             this.timerForUpdate.Tick += new System.EventHandler(this.timerForUpdate_Tick);
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 15;
+            this.listBox1.Location = new System.Drawing.Point(771, 19);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(275, 379);
+            this.listBox1.TabIndex = 14;
+            // 
             // FormForFirst
             // 
             this.AcceptButton = this.buttonToStart;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(767, 429);
+            this.ClientSize = new System.Drawing.Size(1073, 429);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.groupBoxTrap);
             this.Controls.Add(this.buttonToNext);
             this.Controls.Add(this.groupBoxResult);
@@ -206,6 +218,7 @@
             this.Name = "FormForFirst";
             this.Text = "SnmpManager";
             this.Load += new System.EventHandler(this.FormForFirst_Load);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.groupBoxResult.ResumeLayout(false);
             this.groupBoxResult.PerformLayout();
             this.groupBoxTrap.ResumeLayout(false);
@@ -232,6 +245,7 @@
         private System.Windows.Forms.TextBox textBoxForTrap;
         private System.Windows.Forms.GroupBox groupBoxTrap;
         private System.Windows.Forms.Timer timerForUpdate;
+        private System.Windows.Forms.ListBox listBox1;
 
     }
 }

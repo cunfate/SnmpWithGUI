@@ -46,7 +46,14 @@ using namespace std;
 extern "C"
 {
 	string trapoid;
-	char Result[100];
+	long trapCounter = 0;
+
+	_declspec(dllexport) 
+	long getTrapCounter(void)
+	{
+		return trapCounter;
+	}
+	//char Result[100];
 	_declspec(dllexport)
 	void sendPtrToCallback(char * in)
 	{
@@ -68,7 +75,7 @@ extern "C"
 		target.get_address(addr);
 		UdpAddress from(addr);
 		
-
+		++ trapCounter;
 		cout << "reason: " << reason << endl
 			<< "msg: " << snmp->error_msg(reason) << endl
 			<< "from: " << from.get_printable() << endl;
@@ -82,7 +89,7 @@ extern "C"
 		pdu.get_notify_id(id);
 		cout << "ID:  " << id.get_printable() << endl;
 		cout << "Type:" << pdu.get_type() << endl;
-		trapoid += (string)"From" + from.get_printable();
+		trapoid = (string)"\r\nFrom:" + from.get_printable();
 		trapoid += (string)"\r\nOid : " + (id.get_printable());
 
 		for (int i = 0; i < pdu.get_vb_count(); i++)
@@ -221,7 +228,7 @@ extern "C"
 			cout << "start thread failed!" << endl;
 
 		
-		strcpy(Result, "NONONONO!");
+//		strcpy(Result, "NONONONO!");
 		cout << "press return to stop\n";
 		//getc(stdin);
 
