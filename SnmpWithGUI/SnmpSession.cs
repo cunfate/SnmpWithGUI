@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SnmpWithGUI
 {
-    class SnmpSession
+    public class SnmpSession
     {
         public string version{get;set;}
         public string address { get; set; }

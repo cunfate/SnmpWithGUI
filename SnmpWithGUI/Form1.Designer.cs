@@ -45,7 +45,7 @@
             this.textBoxForTrap = new System.Windows.Forms.TextBox();
             this.groupBoxTrap = new System.Windows.Forms.GroupBox();
             this.timerForUpdate = new System.Windows.Forms.Timer(this.components);
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.treeViewForResult = new System.Windows.Forms.TreeView();
             this.groupBoxResult.SuspendLayout();
             this.groupBoxTrap.SuspendLayout();
             this.SuspendLayout();
@@ -186,22 +186,20 @@
             this.timerForUpdate.Interval = 1000;
             this.timerForUpdate.Tick += new System.EventHandler(this.timerForUpdate_Tick);
             // 
-            // listBox1
+            // treeViewForResult
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(771, 19);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(275, 379);
-            this.listBox1.TabIndex = 14;
+            this.treeViewForResult.Location = new System.Drawing.Point(783, 19);
+            this.treeViewForResult.Name = "treeViewForResult";
+            this.treeViewForResult.Size = new System.Drawing.Size(281, 384);
+            this.treeViewForResult.TabIndex = 14;
             // 
             // FormForFirst
             // 
             this.AcceptButton = this.buttonToStart;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1073, 429);
-            this.Controls.Add(this.listBox1);
+            this.ClientSize = new System.Drawing.Size(1076, 429);
+            this.Controls.Add(this.treeViewForResult);
             this.Controls.Add(this.groupBoxTrap);
             this.Controls.Add(this.buttonToNext);
             this.Controls.Add(this.groupBoxResult);
@@ -245,7 +243,7 @@
         private System.Windows.Forms.TextBox textBoxForTrap;
         private System.Windows.Forms.GroupBox groupBoxTrap;
         private System.Windows.Forms.Timer timerForUpdate;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.TreeView treeViewForResult;
 
     }
 }

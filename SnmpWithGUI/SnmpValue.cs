@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using SnmpWithGUI;
 
 
 
@@ -45,6 +46,8 @@ public class SnmpValue
                 intPtr = snmpWalkByNext(tempIP, tempOID);
                 inquiryResult = Marshal.PtrToStringAnsi(intPtr);
                 break;
+            case "walk2":
+                break;
             default:
                 break;
         }
@@ -53,6 +56,19 @@ public class SnmpValue
             "OID:" + inquiryOID + "\r\n" +
              inquiryResult + "\r\n";
         return inquiryResult;
+    }
+
+    public SnmpSession[] snmpWalk_i()
+    {
+        string[] tempresult;
+        tempresult = snmpWalk(inquiryIP, inquiryOID);
+        SnmpSession[] result = new SnmpSession[tempresult.Length - 1];
+        uint i = 0;
+        for (i = 0; i < tempresult.Length - 1; i++)
+        {
+            result[i] = new SnmpSession(tempresult[i]);
+        }
+        return result;
     }
 
     //构造函数
@@ -73,6 +89,38 @@ public class SnmpValue
         this.inquiryIP = ip;
         this.inquiryOID = oid;
         this.operation = op;
+    }
+
+    public string[] snmpWalk(string ip, string oid_in)
+    {
+        StringBuilder tempIP = new StringBuilder();
+        StringBuilder tempOID = new StringBuilder();
+        SnmpOID oidInput = new SnmpOID(oid_in);
+        SnmpOID oidTemp = new SnmpOID(oid_in);
+        string result = "";
+        tempIP.Append(ip);
+        tempOID.Append(oid_in);
+        while((oidTemp.oidSegInt[oidTemp.oidLen - 1]) == (oidInput.oidSegInt[oidInput.oidLen - 1]))
+        {
+           // IntPtr temp;
+            string tempstr;
+            tempstr = Marshal.PtrToStringAnsi(snmpGetNextOid(tempIP, tempOID));
+            oidTemp.Change(tempstr);
+
+            if ((oidTemp.oidSegInt[oidInput.oidLen - 1]) != (oidInput.oidSegInt[oidInput.oidLen - 1]))
+            {
+                break;
+            }
+            tempOID.Clear();
+            tempOID.Append(tempstr);
+
+            tempstr = "2c:" + ip + ":" + tempstr + ":" + Marshal.PtrToStringAnsi(snmpGet(tempIP, tempOID));
+            result += tempstr + ";";
+        }
+        string[] result2 = result.Split(new char[] {';'});
+        return result2;
+        
+
     }
 
 

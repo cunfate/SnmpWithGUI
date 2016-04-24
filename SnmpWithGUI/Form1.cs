@@ -78,7 +78,19 @@ namespace SnmpWithGUI
         private void buttonToStart_Click(object sender, EventArgs e)
         {
             SnmpValue snmpInquiry = new SnmpValue(textBoxForIP.Text, textBoxForOID.Text, textBoxForInput.Text, comboBoxForSnmpOperation.Text);
-            textBoxResult.Text = snmpInquiry.snmpInquriy();
+            //textBoxResult.Text = snmpInquiry.snmpInquriy();
+            SnmpSession[] re = snmpInquiry.snmpWalk_i();
+            foreach (SnmpSession s in re)
+            {
+                if (treeViewForResult != null)
+                {
+                    TreeNode t = treeViewForResult.Nodes.Add(s.address);
+                    t.Nodes.Add("version:" + s.version);
+                    t.Nodes.Add("ip address :" + s.address);
+                    t.Nodes.Add("oid :" + s.oid);
+                    t.Nodes.Add("value :" + s.value);
+                }
+            }
         }
 
         private void comboBoxForSnmpOperation_SelectedIndexChanged(object sender, EventArgs e)
