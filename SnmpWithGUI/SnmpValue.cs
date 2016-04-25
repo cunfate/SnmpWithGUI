@@ -11,7 +11,10 @@ using System.Runtime.InteropServices;
 using SnmpWithGUI;
 
 
-
+/// <summary>
+/// Snmp的查询操作，每个进程最多只能有一个这种类。
+/// 它的一些方法不是线程安全的。
+/// </summary>
 public class SnmpValue
 {
     public string inquiryIP { get; set; }
@@ -58,6 +61,36 @@ public class SnmpValue
         return inquiryResult;
     }
 
+    public SnmpSession[] snmpInquriy_new()
+    {
+        StringBuilder tempIP = new StringBuilder();
+        StringBuilder tempOID = new StringBuilder();
+        StringBuilder tempContent = new StringBuilder();
+        tempIP.Append(inquiryIP);
+        tempOID.Append(inquiryOID);
+        tempContent.Append(content);
+        switch (operation)
+        {
+            case "get":
+                string t = Marshal.PtrToStringAnsi(snmpGet(tempIP, tempOID));
+                SnmpSession[] s = new SnmpSession[1];
+                s[0] = new SnmpSession("2c:"+inquiryIP+":"+inquiryOID+":"+t);
+                return s;
+               // break;
+            case "set":
+                string t1 = Marshal.PtrToStringAnsi(snmpSet(tempIP, tempOID,tempContent));
+                SnmpSession[] s1 = new SnmpSession[1];
+                s1[0] = new SnmpSession("2c:"+inquiryIP+":"+inquiryOID+":"+t1);
+                return s1;
+             //   break;
+            case "walk":
+                return snmpWalk_i();
+            default:
+                return null;
+        }
+
+    }
+
     public SnmpSession[] snmpWalk_i()
     {
         string[] tempresult;
@@ -100,7 +133,7 @@ public class SnmpValue
         string result = "";
         tempIP.Append(ip);
         tempOID.Append(oid_in);
-        while((oidTemp.oidSegInt[oidTemp.oidLen - 1]) == (oidInput.oidSegInt[oidInput.oidLen - 1]))
+        while ((oidTemp.oidSegInt[oidInput.oidLen - 1]) == (oidInput.oidSegInt[oidInput.oidLen - 1]))
         {
            // IntPtr temp;
             string tempstr;

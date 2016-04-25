@@ -46,12 +46,15 @@ using namespace std;
 extern "C"
 {
 	string trapoid;
-	long trapCounter = 0;
+	string re;
+	int trapCounter = 0;
 
 	_declspec(dllexport) 
-	long getTrapCounter(void)
+	int getTrapCounter(void)
 	{
-		return trapCounter;
+		int t = trapCounter;
+//		trapCounter = 0;
+		return t;
 	}
 	//char Result[100];
 	_declspec(dllexport)
@@ -62,7 +65,11 @@ extern "C"
 	_declspec(dllexport)
 	const char * getTrapInformation()
 	{
-		return (trapoid.c_str());
+		re = trapoid;
+		trapoid = "";
+		trapCounter = 0;
+		return re.c_str();
+		//return (trapoid.c_str());
 	}
 	//_declspec(dllexport)
 
@@ -75,7 +82,7 @@ extern "C"
 		target.get_address(addr);
 		UdpAddress from(addr);
 		
-		++ trapCounter;
+		trapCounter = 1;
 		cout << "reason: " << reason << endl
 			<< "msg: " << snmp->error_msg(reason) << endl
 			<< "from: " << from.get_printable() << endl;
@@ -89,8 +96,10 @@ extern "C"
 		pdu.get_notify_id(id);
 		cout << "ID:  " << id.get_printable() << endl;
 		cout << "Type:" << pdu.get_type() << endl;
-		trapoid = (string)"\r\nFrom:" + from.get_printable();
-		trapoid += (string)"\r\nOid : " + (id.get_printable());
+		//trapoid = (string)"\r\nFrom:" + from.get_printable();
+		//trapoid += (string)"\r\nOid : " + (id.get_printable());
+		trapoid += (string)"2c:" + from.get_printable() + (string)":";
+		trapoid += id.get_printable() + (string)";";
 
 		for (int i = 0; i < pdu.get_vb_count(); i++)
 		{
@@ -99,7 +108,10 @@ extern "C"
 			cout << "Oid: " << nextVb.get_printable_oid() << endl
 				<< "Val: " << nextVb.get_printable_value() << endl;
 		//	trapoid += nextVb.get_printable_oid();
+			trapoid += nextVb.get_printable_oid() + (string)":" ;
+			trapoid += nextVb.get_printable_value() + (string)":";
 		}
+		trapoid += (string)"\n";
 		if (pdu.get_type() == sNMP_PDU_INFORM) {
 			cout << "pdu type: " << pdu.get_type() << endl;
 			cout << "sending response to inform: " << endl;

@@ -312,7 +312,7 @@ extern "C"
 #endif
 
 		setResult = vb.get_printable_value();
-		setResult = "Now value: " + setResult;
+		//setResult = "Now value: " + setResult;
 		//strcpy_s(nowVal, temp.c_str());
 		Snmp::socket_cleanup();  // Shut down socket subsystem
 		//return 0;

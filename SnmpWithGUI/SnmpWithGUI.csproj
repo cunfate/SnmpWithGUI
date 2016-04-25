@@ -57,6 +57,7 @@
     <Compile Include="SnmpSession.cs" />
     <Compile Include="SnmpTrapListen.cs" />
     <Compile Include="SnmpTrapSession.cs" />
+    <Compile Include="SnmpUseInform.cs" />
     <Compile Include="SnmpValue.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

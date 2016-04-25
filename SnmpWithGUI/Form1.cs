@@ -75,25 +75,47 @@ namespace SnmpWithGUI
             timerForUpdate.Enabled = true;
         }
 
+        #region execute the get/set/walk operation in background thread
+        private string[] buff;
+        private SnmpSession[] snmpsession;
+
         private void buttonToStart_Click(object sender, EventArgs e)
         {
-            SnmpValue snmpInquiry = new SnmpValue(textBoxForIP.Text, textBoxForOID.Text, textBoxForInput.Text, comboBoxForSnmpOperation.Text);
-            //textBoxResult.Text = snmpInquiry.snmpInquriy();
-            SnmpSession[] re = snmpInquiry.snmpWalk_i();
-            foreach (SnmpSession s in re)
-            {
-                if (treeViewForResult != null)
+            buff = new string[]{ textBoxForIP.Text, textBoxForOID.Text, textBoxForInput.Text, comboBoxForSnmpOperation.Text };
+            this.bgwForRefreshResult.RunWorkerAsync();
+        }
+        private void GetSnmpSession()
+        {
+            SnmpValue snmpInquiry = new SnmpValue(buff[0],buff[1],buff[2],buff[3]);
+            snmpsession = snmpInquiry.snmpInquriy_new();
+        }
+       private void RefreshResultTree()
+       {
+                foreach (SnmpSession s in snmpsession)
                 {
-                    TreeNode t = treeViewForResult.Nodes.Add(s.address);
-                    t.Nodes.Add("version:" + s.version);
-                    t.Nodes.Add("ip address :" + s.address);
-                    t.Nodes.Add("oid :" + s.oid);
-                    t.Nodes.Add("value :" + s.value);
+                    if (treeViewForResult != null)
+                    {
+                        TreeNode t = treeViewForResult.Nodes.Add(s.address);
+                        t.Nodes.Add("version:" + s.version);
+                        t.Nodes.Add("ip address :" + s.address);
+                        t.Nodes.Add("oid :" + s.oid);
+                        t.Nodes.Add("value :" + s.value);
+                    }
                 }
-            }
         }
 
-        private void comboBoxForSnmpOperation_SelectedIndexChanged(object sender, EventArgs e)
+       private void bgwForRefreshResult_DoWork(object sender, DoWorkEventArgs e)
+       {
+           this.GetSnmpSession();
+       }
+
+       private void bgwForRefreshResult_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+       {
+           this.RefreshResultTree();
+       }
+        #endregion
+
+       private void comboBoxForSnmpOperation_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxForSnmpOperation.Text != "set")
                 textBoxForInput.Enabled = false;
@@ -125,12 +147,20 @@ namespace SnmpWithGUI
                 snmpInquiry.inquiryOID = temp;
                 if (snmpInquiry.operation == "get")
                 {
-                    textBoxResult.Text = snmpInquiry.snmpInquriy();
+                   // textBoxResult.Text = snmpInquiry.snmpInquriy();
+                    snmpsession = snmpInquiry.snmpInquriy_new();
+                    foreach (SnmpSession s in snmpsession)
+                    {
+                        if (treeViewForResult != null)
+                        {
+                            TreeNode t = treeViewForResult.Nodes.Add(s.address);
+                            t.Nodes.Add("version:" + s.version);
+                            t.Nodes.Add("ip address :" + s.address);
+                            t.Nodes.Add("oid :" + s.oid);
+                            t.Nodes.Add("value :" + s.value);
+                        }
+                    }
                 }
-            }
-            else
-            {
-                textBoxResult.Text = temp;
             }
 
          }
@@ -144,20 +174,43 @@ namespace SnmpWithGUI
             Form1_Resize(new object(),new EventArgs());
         }
 
-        public long trapCnt = 0;
-        public long trapCntPre = 0;
+        //public long trapCnt = 0;
+        //public long trapCntPre = 0;
         private void timerForUpdate_Tick(object sender, EventArgs e)
         {
-
+            long trapCnt = 0;
             trapCnt = SnmpTrapListen.getTrapCounter();
-            if (trapCnt != trapCntPre)
+            if (trapCnt > 0)
             {
                 StringBuilder UpdateInformation = new StringBuilder();
                 IntPtr ptr;
                 ptr = SnmpTrapListen.getTrapInformation();
                 string temp = Marshal.PtrToStringAnsi(ptr);
-                textBoxForTrap.Text += temp;
-                trapCntPre = trapCnt;
+                //textBoxForTrap.Text += temp;
+                //trapCntPre = trapCnt;
+                string[] part = temp.Split(new char[] {'\n'});
+                //if (part.Length != trapCnt)
+                //{
+                //    return;
+                //}
+                long i = 0;
+                for (i = 0; i < part.Length - 1; i++)
+                {
+                    SnmpTrapSession newsession = new SnmpTrapSession(part[i]);
+                    TreeNode t = treeViewForTrap.Nodes.Add(newsession.address + "  " + System.DateTime.Now.ToString());
+                    t.Nodes.Add("version:"+newsession.version);
+                    t.Nodes.Add("ip adress:"+newsession.address);
+                    t.Nodes.Add("port:"+newsession.port);
+                    t.Nodes.Add("trap oid:" + newsession.oid);
+                    SnmpUseInform s = newsession.head;
+                    while (s != null)
+                    {
+                        t.Nodes.Add("Context oid:" + s.oid);
+                        t.Nodes.Add("Context value:" + s.value);
+                        s = s.next;
+                    }
+ 
+                }
             }
         }
 
@@ -165,6 +218,8 @@ namespace SnmpWithGUI
         {
 
         }
+
+
     }
 }
 

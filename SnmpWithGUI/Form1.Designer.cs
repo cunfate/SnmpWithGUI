@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormForFirst));
-            this.textBoxResult = new System.Windows.Forms.TextBox();
             this.buttonToStart = new System.Windows.Forms.Button();
             this.comboBoxForSnmpOperation = new System.Windows.Forms.ComboBox();
             this.textBoxForIP = new System.Windows.Forms.TextBox();
@@ -40,29 +39,20 @@
             this.labelForOID = new System.Windows.Forms.Label();
             this.textBoxForInput = new System.Windows.Forms.TextBox();
             this.labelForInput = new System.Windows.Forms.Label();
-            this.groupBoxResult = new System.Windows.Forms.GroupBox();
             this.buttonToNext = new System.Windows.Forms.Button();
-            this.textBoxForTrap = new System.Windows.Forms.TextBox();
-            this.groupBoxTrap = new System.Windows.Forms.GroupBox();
             this.timerForUpdate = new System.Windows.Forms.Timer(this.components);
             this.treeViewForResult = new System.Windows.Forms.TreeView();
-            this.groupBoxResult.SuspendLayout();
-            this.groupBoxTrap.SuspendLayout();
+            this.bgwForRefreshResult = new System.ComponentModel.BackgroundWorker();
+            this.treeViewForTrap = new System.Windows.Forms.TreeView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxForTrap = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
+            this.groupBoxForTrap.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // textBoxResult
-            // 
-            this.textBoxResult.Location = new System.Drawing.Point(5, 28);
-            this.textBoxResult.Multiline = true;
-            this.textBoxResult.Name = "textBoxResult";
-            this.textBoxResult.ReadOnly = true;
-            this.textBoxResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxResult.Size = new System.Drawing.Size(362, 175);
-            this.textBoxResult.TabIndex = 0;
             // 
             // buttonToStart
             // 
-            this.buttonToStart.Location = new System.Drawing.Point(12, 153);
+            this.buttonToStart.Location = new System.Drawing.Point(12, 416);
             this.buttonToStart.Name = "buttonToStart";
             this.buttonToStart.Size = new System.Drawing.Size(179, 37);
             this.buttonToStart.TabIndex = 1;
@@ -141,45 +131,15 @@
             this.labelForInput.TabIndex = 9;
             this.labelForInput.Text = "置入值：";
             // 
-            // groupBoxResult
-            // 
-            this.groupBoxResult.Controls.Add(this.textBoxResult);
-            this.groupBoxResult.Location = new System.Drawing.Point(12, 207);
-            this.groupBoxResult.Name = "groupBoxResult";
-            this.groupBoxResult.Size = new System.Drawing.Size(375, 211);
-            this.groupBoxResult.TabIndex = 10;
-            this.groupBoxResult.TabStop = false;
-            this.groupBoxResult.Text = "查询结果";
-            // 
             // buttonToNext
             // 
-            this.buttonToNext.Location = new System.Drawing.Point(208, 153);
+            this.buttonToNext.Location = new System.Drawing.Point(203, 416);
             this.buttonToNext.Name = "buttonToNext";
             this.buttonToNext.Size = new System.Drawing.Size(179, 37);
             this.buttonToNext.TabIndex = 11;
             this.buttonToNext.Text = "Get Next";
             this.buttonToNext.UseVisualStyleBackColor = true;
             this.buttonToNext.Click += new System.EventHandler(this.buttonToNext_Click);
-            // 
-            // textBoxForTrap
-            // 
-            this.textBoxForTrap.Location = new System.Drawing.Point(12, 24);
-            this.textBoxForTrap.Multiline = true;
-            this.textBoxForTrap.Name = "textBoxForTrap";
-            this.textBoxForTrap.ReadOnly = true;
-            this.textBoxForTrap.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxForTrap.Size = new System.Drawing.Size(351, 367);
-            this.textBoxForTrap.TabIndex = 12;
-            // 
-            // groupBoxTrap
-            // 
-            this.groupBoxTrap.Controls.Add(this.textBoxForTrap);
-            this.groupBoxTrap.Location = new System.Drawing.Point(392, 12);
-            this.groupBoxTrap.Name = "groupBoxTrap";
-            this.groupBoxTrap.Size = new System.Drawing.Size(373, 397);
-            this.groupBoxTrap.TabIndex = 13;
-            this.groupBoxTrap.TabStop = false;
-            this.groupBoxTrap.Text = "Trap信息";
             // 
             // timerForUpdate
             // 
@@ -188,21 +148,52 @@
             // 
             // treeViewForResult
             // 
-            this.treeViewForResult.Location = new System.Drawing.Point(783, 19);
+            this.treeViewForResult.Location = new System.Drawing.Point(6, 36);
             this.treeViewForResult.Name = "treeViewForResult";
-            this.treeViewForResult.Size = new System.Drawing.Size(281, 384);
+            this.treeViewForResult.Size = new System.Drawing.Size(300, 400);
             this.treeViewForResult.TabIndex = 14;
+            // 
+            // bgwForRefreshResult
+            // 
+            this.bgwForRefreshResult.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwForRefreshResult_DoWork);
+            this.bgwForRefreshResult.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwForRefreshResult_RunWorkerCompleted);
+            // 
+            // treeViewForTrap
+            // 
+            this.treeViewForTrap.Location = new System.Drawing.Point(7, 36);
+            this.treeViewForTrap.Name = "treeViewForTrap";
+            this.treeViewForTrap.Size = new System.Drawing.Size(300, 400);
+            this.treeViewForTrap.TabIndex = 15;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.treeViewForResult);
+            this.groupBox1.Location = new System.Drawing.Point(388, 5);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(313, 448);
+            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "查询结果";
+            // 
+            // groupBoxForTrap
+            // 
+            this.groupBoxForTrap.Controls.Add(this.treeViewForTrap);
+            this.groupBoxForTrap.Location = new System.Drawing.Point(707, 5);
+            this.groupBoxForTrap.Name = "groupBoxForTrap";
+            this.groupBoxForTrap.Size = new System.Drawing.Size(313, 448);
+            this.groupBoxForTrap.TabIndex = 17;
+            this.groupBoxForTrap.TabStop = false;
+            this.groupBoxForTrap.Text = "Trap/Notification";
             // 
             // FormForFirst
             // 
             this.AcceptButton = this.buttonToStart;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1076, 429);
-            this.Controls.Add(this.treeViewForResult);
-            this.Controls.Add(this.groupBoxTrap);
+            this.ClientSize = new System.Drawing.Size(1026, 465);
+            this.Controls.Add(this.groupBoxForTrap);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonToNext);
-            this.Controls.Add(this.groupBoxResult);
             this.Controls.Add(this.labelForInput);
             this.Controls.Add(this.textBoxForInput);
             this.Controls.Add(this.labelForOID);
@@ -217,10 +208,8 @@
             this.Text = "SnmpManager";
             this.Load += new System.EventHandler(this.FormForFirst_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
-            this.groupBoxResult.ResumeLayout(false);
-            this.groupBoxResult.PerformLayout();
-            this.groupBoxTrap.ResumeLayout(false);
-            this.groupBoxTrap.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBoxForTrap.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,7 +217,6 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxResult;
         private System.Windows.Forms.Button buttonToStart;
         private System.Windows.Forms.ComboBox comboBoxForSnmpOperation;
         private System.Windows.Forms.TextBox textBoxForIP;
@@ -238,12 +226,13 @@
         private System.Windows.Forms.Label labelForOID;
         private System.Windows.Forms.TextBox textBoxForInput;
         private System.Windows.Forms.Label labelForInput;
-        private System.Windows.Forms.GroupBox groupBoxResult;
         private System.Windows.Forms.Button buttonToNext;
-        private System.Windows.Forms.TextBox textBoxForTrap;
-        private System.Windows.Forms.GroupBox groupBoxTrap;
         private System.Windows.Forms.Timer timerForUpdate;
         private System.Windows.Forms.TreeView treeViewForResult;
+        private System.ComponentModel.BackgroundWorker bgwForRefreshResult;
+        private System.Windows.Forms.TreeView treeViewForTrap;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxForTrap;
 
     }
 }

@@ -18,12 +18,15 @@ namespace SnmpWithGUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            #region create a thread to listen for trap
 
             SnmpTrapListen trapListener = new SnmpTrapListen(10162);
             trapListener.sendPortToCallback(10162);
             Thread snmpTrapListener1 = new Thread(new ParameterizedThreadStart(trapListener.sendPortToCallback));
             snmpTrapListener1.IsBackground = true;
             snmpTrapListener1.Start(trapListener.portToListen);
+
+            #endregion
             Application.Run(new FormForFirst());
         }
     }
